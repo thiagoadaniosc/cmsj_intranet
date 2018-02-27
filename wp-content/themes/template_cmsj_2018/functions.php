@@ -2,8 +2,14 @@
 // Theme Supports
 
 define('TEMPLATE_URI', get_template_directory_uri());
-define('FOLHAWEB_URI', 'http://192.168.4.10/folhaweb');
-define('CLIPAGEMDIGITAL_URI', 'http://clipagem.cmsj.local');
+
+define('SUPORTE_URI', 'http://clipagem.cmsj.info');
+define('COMUNICADOS_URI', '/comunicados');
+define('FOLHAWEB_URI', 'http://192.168.4.10/folhaweb');	
+define('RAMAIS_URI', '/ramais');
+define('DOM_URI', 'https://www.diariomunicipal.sc.gov.br/site/');
+define('CLIPAGEMDIGITAL_URI', 'http://clipagem.cmsj.info');
+define('CONFIGURACOES_URI', '/wp-admin/profile.php');
 
 
 add_post_type_support( 'page', 'excerpt' );
@@ -12,6 +18,7 @@ add_post_type_support( 'page', 'excerpt' );
 register_nav_menus(
 	array(
 		'menu_topo' => 'Menu de Cabeçalho',
+		'menu_aside' => 'Menu de Lateral',
 	)
 );
 
@@ -73,7 +80,9 @@ function post_type_ramais(){
 			'labels' => $labels, 
 			'public' => true,
 			'has_archive' => true,
-			'supports' => ['title'],
+			'supports' => [''],
+			//'capability_type' => ['ramais', 'ramal'],
+			
 			//'taxonomies' => array('post_tag'),
 			'capabilities' => array(
 				'edit_post'          => 'edit_ramal', 
@@ -84,13 +93,13 @@ function post_type_ramais(){
 				'publish_posts'      => 'publish_ramais',       
 				'read_private_posts' => 'read_private_ramais', 
 				'create_posts'       => 'create_ramais', 
-			),
-			//'capability_type' => array('noticias', 'noticia')
+			)
+			//'capability_type' => array('ramal', 'ramais'),
 		)
 
 	);
 }
-/*
+
 
 function post_type_informatica(){
 	$labels = array(
@@ -121,6 +130,7 @@ function post_type_informatica(){
 
 	);
 }
+/*
 
 function post_type_adm(){
 	$labels = array(
@@ -285,16 +295,108 @@ function my_custom_fonts() {
 </style>';
 }
 
+function metabox_ramais( $meta_boxes ) {
+	$prefix = 'prefix-ramais';
+
+	$meta_boxes[] = array(
+		'id' => 'metabox-ramais',
+		'title' => esc_html__( 'Ramais', 'metabox-ramais' ),
+		'post_types' => array( 'ramais' ),
+		'context' => 'advanced',
+		'priority' => 'default',
+		'autosave' => false,
+		'fields' => array(
+			array(
+				'id' => $prefix . 'ramais_setor',
+				'type' => 'text',
+				'name' => esc_html__( 'Setor', 'metabox-ramais' ),
+				'placeholder' => esc_html__( 'Setor', 'metabox-ramais' ),
+			),
+			array(
+				'id' => $prefix . 'ramais_servidor',
+				'type' => 'text',
+				'name' => esc_html__( 'Ramal', 'metabox-ramais' ),
+				'placeholder' => esc_html__( 'Ramal', 'metabox-ramais' ),
+			),
+		),
+	);
+
+	return $meta_boxes;
+}
+
+function add_new_roles(){
+	add_role( 'rh', 'Recursos Humanos', array( 'read' => true, 'level_0' => true ));
+	add_role( 'cms', 'Comunicação Social', array( 'read' => true, 'level_0' => true ));
+	//remove_role('cms');
+	//remove_role('rh');
+}
+
+
+add_filter( 'rwmb_meta_boxes', 'metabox_ramais' );
+
+
+function add_event_caps() {
+	
+	// Administrador Permissões
+
+	$role = get_role( 'administrator' );
+	// Ramais
+	$role->add_cap( 'edit_ramal' ); 
+	$role->add_cap( 'read_ramal' ); 
+	$role->add_cap( 'delete_ramal' ); 
+	$role->add_cap( 'edit_ramais' ); 
+	$role->add_cap( 'edit_others_ramais' ); 
+	$role->add_cap( 'publish_ramais' ); 
+	$role->add_cap( 'read_private_ramais' ); 
+	$role->add_cap( 'create_ramais' ); 
+	// Comunicados
+	$role->add_cap( 'edit_comunicado' ); 
+	$role->add_cap( 'read_comunicado' ); 
+	$role->add_cap( 'delete_comunicado' ); 
+	$role->add_cap( 'edit_comunicados' ); 
+	$role->add_cap( 'edit_others_comunicados' ); 
+	$role->add_cap( 'publish_comunicados' ); 
+	$role->add_cap( 'read_private_comunicados' ); 
+	$role->add_cap( 'create_comunicados' ); 
+
+	$role = get_role( 'cms' );
+
+	$role->add_cap('edit_posts');
+	$role->add_cap('read_posts');
+	$role->add_cap('delete_posts');
+	$role->add_cap('publish_posts');
+	$role->add_cap('create_posts');
+	$role->add_cap('edit_published_posts');
+	$role->add_cap('delete_published_posts');
+
+	$role = get_role( 'rh' );
+
+	$role->add_cap( 'edit_comunicado' ); 
+	$role->add_cap( 'read_comunicado' ); 
+	$role->add_cap( 'delete_comunicado' ); 
+	$role->add_cap( 'edit_comunicados' ); 
+	$role->add_cap( 'edit_others_comunicados' ); 
+	$role->add_cap( 'publish_comunicados' ); 
+	$role->add_cap( 'read_private_comunicados' ); 
+	$role->add_cap( 'create_comunicados' );
+}
+
+add_action( 'admin_init', 'add_event_caps');
+
+add_action( 'init', 'add_new_roles');
+
 add_filter('v_forcelogin_redirect', 'my_forcelogin_redirect', 10, 1);
 
 add_filter('login_redirect', 'my_forcelogin_redirect', 10, 1);
 
 add_action( 'init', 'post_type_comunicados');
+
 //add_action( 'init', 'post_type_informatica');
 //add_action( 'init', 'post_type_adm');
 //add_action( 'init', 'post_type_rh');
+
 add_action( 'init', 'post_type_galeria');
 add_action( 'init', 'post_type_ramais');
 add_theme_support( 'post-thumbnails', array('comunicados', 'galeria'));
 add_action('init','possibly_redirect'); 
-add_action('admin_head', 'my_custom_fonts');
+//add_action('admin_head', 'my_custom_fonts');

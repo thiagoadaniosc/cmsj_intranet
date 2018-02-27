@@ -40,7 +40,7 @@ $exit_msg = sprintf( 'User Role Editor requires PHP %s or newer.', $ure_required
 URE_Lib::check_version( PHP_VERSION, $ure_required_php_version, $exit_msg, __FILE__ );
 
 // check WP version
-$ure_required_wp_version = '4.0';
+$ure_required_wp_version = '4.3';
 $exit_msg = sprintf( 'User Role Editor requires WordPress %s or newer.', $ure_required_wp_version ) . 
                         '<a href="http://codex.wordpress.org/Upgrading_WordPress"> ' . 'Please update!' . '</a>';
 URE_Lib::check_version(get_bloginfo('version'), $ure_required_wp_version, $exit_msg, __FILE__ );

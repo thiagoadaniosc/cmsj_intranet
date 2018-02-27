@@ -2,7 +2,7 @@
 Contributors: shinephp
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=vladimir%40shinephp%2ecom&lc=RU&item_name=ShinePHP%2ecom&item_number=User%20Role%20Editor%20WordPress%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: user, role, editor, security, access, permission, capability
-Requires at least: 4.0
+Requires at least: 4.3
 Tested up to: 4.9.2
 Stable tag: 4.40
 License: GPLv2 or later

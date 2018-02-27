@@ -35,7 +35,7 @@ msgstr "Ou registre-se com um endereço de e-mail diferente"
 msgid "Used by millions, Akismet is quite possibly the best way in the world to <strong>protect your blog from spam</strong>. It keeps your site protected even while you sleep. To get started: activate the Akismet plugin and then go to your Akismet Settings page to set up your API key."
 msgstr "Usado por milhões, Akismet é possivelmente a melhor maneira do mundo para <strong>proteger seu blog contra spam</strong>. Ele mantém seu site protegido mesmo enquanto você dorme. Para começar: ative o plugin Akismet e vá para a página Configurações do Akismet para configurar sua chave API."
 
-#. #-#-#-#-#  akismet-code.pot (Akismet Anti-Spam 4.0.2)  #-#-#-#-#
+#. #-#-#-#-#  akismet-code.pot (Akismet Anti-Spam 4.0.3)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: class.akismet-admin.php:95 class.akismet-admin.php:98
 msgid "Akismet Anti-Spam"
@@ -129,7 +129,7 @@ msgstr "Comentário #%d não é spam."
 msgid "Comment #%d could not be checked."
 msgstr "Comentário #%d não pode ser verificado."
 
-#: class.akismet.php:452
+#: class.akismet.php:492
 msgid "Comment not found."
 msgstr "Comentário não encontrado."
 
@@ -659,11 +659,11 @@ msgstr "Clique no botão Usar esta chave."
 msgid "Cleaning up spam takes time."
 msgstr "Leva um tempo para limpar os spams."
 
-#: class.akismet.php:1208
+#: class.akismet.php:1248
 msgid "Akismet %s requires WordPress %s or higher."
 msgstr "O Akismet %s requer WordPress %s ou superior."
 
-#: class.akismet.php:1208
+#: class.akismet.php:1248
 msgid "Please <a href=\"%1$s\">upgrade WordPress</a> to a current version, or <a href=\"%2$s\">downgrade to version 2.4 of the Akismet plugin</a>."
 msgstr "<a href=\"%1$s\">Atualize o WordPress</a> para a versão atual ou <a href=\"%2$s\">faça downgrade para a versão 2.4 do plugin Akismet</a>."
 

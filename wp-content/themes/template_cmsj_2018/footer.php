@@ -6,7 +6,6 @@
 <script src="<?= TEMPLATE_URI ?> /js/bootstrap.min.js" type="text/javascript"></script>
 
 <script src="<?= TEMPLATE_URI ?> /js/script.js"></script>
-
+<?php wp_footer() ?>
 </body>
-
 </html>
