@@ -171,8 +171,13 @@ function mdocs_batch_upload($current_cat) {
 				if(!isset($upload['error'])) {
 					$mdocs = get_option('mdocs-list');
 					if(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '') {
-						$boxview = new mdocs_box_view();
-						$boxview_file = $boxview->uploadFile(get_site_url().'/?mdocs-file='.$upload['attachment_id'].'&mdocs-url=false&is-box-view=true', $upload['filename']);
+						$is_image = @getimagesize($upload['file']);
+						if($is_image == false && pathinfo($upload['file'], PATHINFO_EXTENSION) != 'zip' && pathinfo($upload['file'], PATHINFO_EXTENSION) != 'rar') {
+							$boxview = new mdocs_box_view();
+							$upload['type'] = pathinfo($upload['file'], PATHINFO_EXTENSION);
+							$boxview_file = $boxview->uploadFile($upload);
+							$boxview_file = $boxview_file['entries'][0];
+						} else $boxview_file['id'] = 0;
 					} else $boxview_file['id'] = 0;
 					$date = mdocs_format_unix_epoch();
 					array_push($mdocs, array(

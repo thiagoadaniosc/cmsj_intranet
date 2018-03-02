@@ -87,12 +87,13 @@ function mdocs_settings() {
 			<input type="checkbox" name="mdocs-disable-jquery" value="1"  <?php checked(1,$mdocs_disable_jquery) ?> /> <span><?php _e('jQuery'); ?></span><br>
 			<input type="checkbox" name="mdocs-disable-fontawesome" value="1"  <?php checked(1,$mdocs_disable_fontawesome) ?> /> <span><?php _e('Fontawesome', 'memphis-documents-library'); ?></span><br>
 			<h5><?php _e('Document Preview Settings', 'memphis-documents-library'); ?></h5>
-			<input type="radio" name="mdocs-preview-type" value="google" <?php checked('google', $mdocs_preview_type) ?>> <?php _e('Use Google Docuement Preview', 'memphis-documents-library'); ?><br>			
-			<input type="radio" name="mdocs-preview-type" value="box" <?php checked('box', $mdocs_preview_type) ?>> <?php _e('Use Box Document Preview', 'memphis-documents-library'); ?><br>
+			<input type="radio" name="mdocs-preview-type" value="google" <?php checked('google', $mdocs_preview_type) ?>> <?php _e('Use Local Docuement Preview', 'memphis-documents-library'); ?> - <small><i>
+			<?php _e('Local preview allows you to preview PDF, Image files, and ZIP files only, if you are looking for capibilities try using Box View.', 'memphis-documents-library'); ?></i></small><br>	
+			<input type="radio" name="mdocs-preview-type" value="box" <?php checked('box', $mdocs_preview_type) ?>> <?php _e('Use Box Document Preview', 'memphis-documents-library'); ?> - <small><i><?php _e('A Box development key is needed to use Box document preview.', 'memphis-documents-library'); ?><br><?php _e('To get a Box developers key please click the link below and create an account.', 'memphis-documents-library'); ?></i></small><br>
 			<label><?php _e('Box View Key','memphis-documents-library'); ?></label><br>
 			<input style="width: 80%;" type="text" value="<?php echo get_option('mdocs-box-view-key'); ?>" name="mdocs-box-view-key"  placeholder="<?php _e('Enter your key here', 'memphis-documents-library'); ?>"/><br>
-			<a href="https://developers.box.com" target="_blank" alt="<?php _e('Login to Box Developer site to get your key.', 'memphis-documents-library'); ?>"><?php _e('Login to Box Developer site to get your key.', 'memphis-documents-library'); ?></a>
-			<p><?php _e('A Box View Key is needed to use Box Document Preview.', 'memphis-documents-library'); ?><br><?php _e('Unfortunately Box View keys are no longer available, if you have an existing key', 'memphis-documents-library');?><br><?php _e('you will still have preview access using Box View.', 'memphis-documents-library'); ?></p>			
+			<a href="https://developers.box.com" target="_blank" alt="<?php _e('Login to Box Developer site to get your key.', 'memphis-documents-library'); ?>"><?php _e('Login to Box Developer site to get your key.', 'memphis-documents-library'); ?></a><br>
+			<a href="http://kingofnothing.net/creating-a-box-api-developer-key-for-memphis-documents-library/" target="_blank" alt="<?php _e('Creating a Box API Developer Key for Memphis Documents Library.', 'memphis-documents-library'); ?>"><?php _e('Creating a Box API Developer Key for Memphis Documents Library.'); ?></a>				
 		</td>
 		<th></th>
 		<td>

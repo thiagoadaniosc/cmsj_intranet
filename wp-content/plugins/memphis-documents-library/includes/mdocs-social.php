@@ -22,7 +22,7 @@ function mdocs_social($the_mdoc, $page_type='site') {
 	ob_start();
 	if(get_option('mdocs-hide-all-posts') == false && get_option('mdocs-hide-all-files') == false || is_user_logged_in() &&  get_option('mdocs-hide-all-posts-non-members') ) {
 		$the_permalink = get_permalink($the_mdoc['parent']);
-		$the_direct_download = get_site_url().'/?mdocs-file='.$the_mdoc['id'].'&mdocs-url=false';
+		$the_direct_download = get_site_url().'/?mdocs-file='.$the_mdoc['id'];
 		?>
 		<div class="mdocs-social-container <?php if($page_type == 'dashboard') echo 'mdocs-socail-dashboard'; ?>"  id="mdocs-social-<?php echo $the_mdoc['id']; ?>" >
 			<?php if(get_option('mdocs-show-share')) { ?>
@@ -60,7 +60,7 @@ function mdocs_social_scripts() {
 	fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 //TWITTER TWEET
-!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'https':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 //GOOGLE +1
 (function() {
   var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;

@@ -2,36 +2,37 @@
 function mdocs_check_file_rights($the_mdoc=null, $is_manage=true) {
 	$is_allowed = false;
 	if($the_mdoc != null || isset($_GET['mdocs-export-file'])) {
+		// ADMINS GET FULL RIGHTS FOR EVERY FILE
+		if(current_user_can( 'manage_options' )) return true;
+		// OWNER RIGHTS
 		$current_user = wp_get_current_user();
 		if(empty($current_user->roles)) $current_user->roles[0] = 'none';
-		// ADMINS GET FULL RIGHTS FOR EVERY FILE
-		if(current_user_can( 'manage_options' )) $is_allowed = true;
-		// OWNER RIGHTS
-		if($current_user->user_login == $the_mdoc['owner']) $is_allowed = true;
+		if($current_user->user_login == $the_mdoc['owner']) return true;
 		// CONTRIBUTOR RIGHTS
 		if(is_array($the_mdoc['contributors'])) {
 			foreach($the_mdoc['contributors'] as $index => $role) {
-				if($current_user->user_login == $role) { $is_allowed = true; break; }
-				if(in_array($role, $current_user->roles)) { $is_allowed = true; break; }
+				if($current_user->user_login == $role) return true; 
+				if(in_array($role, $current_user->roles)) return true; 
 			}
 		}
-		// IF IS NOT A MANAGEMENT PAGE
-		if($is_manage == false) {
-			if($is_allowed === false) {
-				// MEMBER RIGHTS
-				if(is_user_logged_in()) {
-					if($the_mdoc['file_status'] != 'hidden' && get_option( 'mdocs-hide-all-files' ) == false) $is_allowed = true;
-					if(floatval($the_mdoc['modified']) > time()) $is_allowed = false;
-				// NON-MEMBER RIGHTS
-				} else {
-					if(get_option( 'mdocs-hide-all-files-non-members' ) == false && get_option( 'mdocs-hide-all-files' ) == false) $is_allowed = true;
-					if($the_mdoc['file_status'] == 'hidden') $is_allowed = false;
-					if(floatval($the_mdoc['modified']) > time()) $is_allowed = false;
-				}
-				if(isset($_GET['mdocs-export-file']) && current_user_can( 'manage_options' )) $is_allowed = true;
-				if(isset($_GET['mdocs-export-file']) && !current_user_can( 'manage_options' )) $is_allowed = false;
-			}
+		// IF NOT ANY OWNER OF THE FILE
+		// MEMBER RIGHTS
+		if(is_user_logged_in()) {
+			if($the_mdoc['file_status'] != 'hidden' && get_option( 'mdocs-hide-all-files' ) == false) $is_allowed = true;
+			if(floatval($the_mdoc['modified']) > time()) $is_allowed = false;
+			return $is_allowed;
+		// NON-MEMBER RIGHTS
+		} else {
+			if(get_option( 'mdocs-hide-all-files-non-members' ) == false && get_option( 'mdocs-hide-all-files' ) == false) $is_allowed = true;
+			if($the_mdoc['file_status'] === 'hidden') $is_allowed = false;
+			if($the_mdoc['non_members'] === ''  ) $is_allowed = false;
+			if(floatval($the_mdoc['modified']) > time()) $is_allowed = false;
+			//var_dump($_REQUEST);
+			return $is_allowed;
 		}
+		if(isset($_GET['mdocs-export-file']) && current_user_can( 'manage_options' )) return true;
+		if(isset($_GET['mdocs-export-file']) && !current_user_can( 'manage_options' )) return false;
+		
 		return $is_allowed;
 	} else return $is_allowed;
 }
@@ -156,7 +157,7 @@ function mdocs_delete_file_rights($the_mdoc, $index, $current_cat) {
 function mdocs_refresh_box_view($the_mdoc, $index) {
 	if(mdocs_check_file_rights($the_mdoc)) {
 		?>
-		<li role="presentation"><a class="box-view-refresh-button" role="menuitem" tabindex="-1" href="#" data-toggle="mdocs-modal" data-index="<?php echo $index; ?>" data-filename="<?php echo $the_mdoc['filename']; ?>" ><i class="fa fa-refresh" aria-hidden="true"></i> <?php _e('Refresh Preview and Thumbnail','memphis-documents-library'); ?></a></li>
+		<li role="presentation"><a class="box-view-refresh-button" role="menuitem" tabindex="-1" href="#" data-toggle="mdocs-modal" data-id="<?php echo $the_mdoc['id']; ?>" data-index="<?php echo $index; ?>" data-filename="<?php echo $the_mdoc['filename']; ?>" ><i class="fa fa-refresh" aria-hidden="true"></i> <?php _e('Refresh Preview and Thumbnail','memphis-documents-library'); ?></a></li>
 		<?php
 	}
 }

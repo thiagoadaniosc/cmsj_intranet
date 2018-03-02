@@ -48,15 +48,6 @@ function mdocs_ajax_processing() {
 				if(current_user_can('mdocs-dashboard')) echo json_encode(mdocs_format_unix_epoch());
 				else die(__('You are unauthorized to do this.', 'memphis-documents-library'));
 				break;
-			case 'preview':
-				mdocs_load_preview();
-				break;
-			case 'show':
-				mdocs_load_preview();
-				break;
-			case 'desc':
-				mdocs_load_preview();
-				break;
 			case 'add-mime':
 				if(current_user_can('manage_options')) mdocs_update_mime();
 				else die(__('You are unauthorized to do this.', 'memphis-documents-library'));
@@ -98,10 +89,6 @@ function mdocs_ajax_processing() {
 				if(current_user_can('manage_options')) mdocs_box_view_update_v3_0();
 				else die(__('You are unauthorized to do this.', 'memphis-documents-library'));
 				break;
-			case 'mdocs-v3-0-patch-run-updater':
-				if(current_user_can('manage_options')) mdocs_v3_0_patch_run_updater();
-				else die(__('You are unauthorized to do this.', 'memphis-documents-library'));
-				break;
 			case 'mdocs-v3-0-patch-cancel-updater':
 				if(current_user_can('manage_options')) mdocs_v3_0_patch_cancel_updater();
 				else die(__('You are unauthorized to do this.', 'memphis-documents-library'));
@@ -114,14 +101,23 @@ function mdocs_ajax_processing() {
 				echo mdocs_social(intval($_POST['doc-id']));
 				break;
 			case 'box-view-refresh':
-				if(current_user_can('manage_options')) {
+				if(current_user_can('mdocs-dashboard')) {
 					$mdocs = mdocs_array_sort();
-					$file = get_site_url().'/?mdocs-file='.$mdocs[$_POST['index']]['id'].'&mdocs-url=false&is-box-view=true';
-					$boxview = new mdocs_box_view();
-					$results = $boxview->uploadFile($file);
-					$mdocs[$_POST['index']]['box-view-id'] = $results['id'];
-					update_option('mdocs-list', $mdocs);
-					echo '<div class="alert alert-success" role="alert" id="box-view-updated">'.$mdocs[$_POST['index']]['filename'].' '.__('preview has been updated.', 'memphis-documents-library').'</div>';
+					$upload_dir = wp_upload_dir();
+					$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_POST['id'])), 'id');
+					$is_image = @getimagesize($upload_dir['basedir'].'/mdocs/'.$the_mdoc['filename']);
+					if($is_image == false && strtolower($the_mdoc['type']) != 'zip' && strtolower($the_mdoc['type']) != 'rar') {
+						$boxview = new mdocs_box_view();
+						$boxview_file = $boxview->uploadFile($the_mdoc);
+						$boxview_file = $boxview_file['entries'][0];
+						$boxview->deleteFile($the_mdoc);
+						$mdocs[basename(mdocs_sanitize_string($_POST['index']))]['box-view-id'] = $boxview_file['id'];
+						update_option('mdocs-list', $mdocs);
+						echo '<div class="alert alert-success" role="alert" id="box-view-updated">'.$the_mdoc['filename'].' '.__('preview has been updated.', 'memphis-documents-library').'</div>';
+					} else {
+						$boxview_file['id'] = 0;
+						echo '<div class="alert alert-success" role="alert" id="box-view-updated">'.$the_mdoc['filename'].' '.__('is not supported by Box preview.', 'memphis-documents-library').'</div>';
+					}
 				} else die(__('You are unauthorized to do this.', 'memphis-documents-library'));
 				break;
 			case 'lost-file-search-start':

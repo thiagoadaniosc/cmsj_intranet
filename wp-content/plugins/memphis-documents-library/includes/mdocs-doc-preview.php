@@ -1,7 +1,7 @@
 <?php
 function mdocs_load_preview() {
-	if(isset($_POST['type']) && isset($_POST['mdocs_file_id'])) {
-		$the_mdoc = get_the_mdoc_by( $_POST['mdocs_file_id'], 'id');
+	if(isset($_POST['type']) && isset($_POST['mdocs-file'])) {
+		$the_mdoc = get_the_mdoc_by( $_POST['mdocs-file'], 'id');
 		switch($_POST['show_type']) {
 			case 'desc':
 				mdocs_show_description($the_mdoc['id']);
@@ -18,13 +18,13 @@ function mdocs_load_preview() {
 // PREVIEW
 function mdocs_show_preview($the_mdoc) {
 	$upload_dir = wp_upload_dir();
-	$is_allowed = mdocs_check_file_rights($the_mdoc, false);
-	if($is_allowed) {
+	if(mdocs_check_file_rights($the_mdoc)) {
 		$is_image = @getimagesize($upload_dir['basedir'].MDOCS_DIR.$the_mdoc['filename']);
 	   ?>
 		<div class="mdoc-desc">
 			<?php
-			if($is_image == false) mdocs_load_preview_iframe($the_mdoc);
+			
+			if($is_image == false) mdocs_load_preview_iframe($the_mdoc['id']);
 			else mdocs_load_image_iframe($the_mdoc);
 			?>
 	   </div>
@@ -37,10 +37,12 @@ function mdocs_show_preview($the_mdoc) {
 }
 // PREVIEW - DOCUMENT
 function mdocs_load_preview_iframe($file) {
+	$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($file)), 'id');
 	if(get_option('mdocs-preview-type') == 'google') {
-		$link = site_url().'/?is-google='.$file['id'];
+		$nonce = wp_create_nonce( 'mdocs-preview-'.$file );
+		$link = site_url().'/?mdocs-preview='.$file.'&_mdocs-preview='.$nonce;
 		?>
-		<iframe id="mdocs-box-view-iframe" src="//docs.google.com/gview?url=<?php echo $link; ?>&embedded=true&hl=en&mdocs-session=<?php echo md5(microtime()); ?>" style="border: none; width: 100%;" seamless fullscreen></iframe>
+		<iframe id="mdocs-box-view-iframe" src="<?php echo $link; ?>" style="border: none; width: 100%;" seamless fullscreen></iframe>
 		<script>
 			var screenHeight = window.innerHeight-250;
 			jQuery('#mdocs-box-view-iframe').css({'height': screenHeight});
@@ -48,25 +50,121 @@ function mdocs_load_preview_iframe($file) {
 		<?php
 	} elseif(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '') {
 		$boxview = new mdocs_box_view();
-		$view_file = $boxview->downloadFile($file['box-view-id']);
+		$view_file = $boxview->downloadFile($the_mdoc);
 		if(isset($view_file) && $view_file['type'] != 'error') { ?>
-		<h4><?php echo $file['name']; ?></h4>
-		<iframe id="mdocs-box-view-iframe" src="https://view-api.box.com/1/sessions/<?php echo $view_file['id']; ?>/view?theme=dark&mdocs-session=<?php echo md5(microtime()); ?>" seamless fullscreen style="width: 100%; "></iframe>
-		<script>
-			var screenHeight = window.innerHeight-275;
-			jQuery('#mdocs-box-view-iframe').css({'height': screenHeight})
-		</script>
+			<iframe id="mdocs-box-view-iframe" src="<?php echo $view_file['expiring_embed_link']['url']; ?>" seamless fullscreen style="width: 100%; "></iframe>
+			<script>
+				var screenHeight = window.innerHeight-275;
+				jQuery('#mdocs-box-view-iframe').css({'height': screenHeight})
+			</script>
 		<?php } else { ?>
-		<div class="alert alert-warning" role="alert"><?php echo $view_file['details'][0]['message']; ?></div>
+		<div class="alert alert-warning" role="alert">
+			<p><?php echo ucfirst($view_file['type']).' '. __('Status','memphis-documents-library').': '.$view_file['status'].' ( '.$view_file['message'].' ) '; ?></p>
+		</div>
 		<?php
 		}
 	} else _e('No preview type has been selected','memphis-documents-library');
+}
+// DOCUMENT PREVIEW CONTET
+function mdocs_show_preview_iframe_content($file_id) {
+	$upload_dir = wp_upload_dir();
+	$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($file_id)), 'id');
+	$filename = $the_mdoc['filename'];
+	$file = $upload_dir['basedir'].'/mdocs/'.$filename;
+	$nonce = wp_create_nonce( 'mdocs-previewss-'.$file_id );
+	$link = site_url().'/?mdocs-crap='.$_REQUEST['mdocs-preview'].'&_mdocs-previewss='.$nonce;
+	//$preview_url = 'https://docs.google.com/gview?url='.$link.'&embedded=true&toolbar=hide&chrome=true';
+	$preview_url = 'https://view.officeapps.live.com/op/view.aspx?src='.$link;
+	global $mdocs_preview_file_types;
+	if(in_array($the_mdoc['type'], $mdocs_preview_file_types['PDF'])) {
+		header("Content-type: application/pdf");
+		header("Content-Disposition: inline; filename=".$filename);
+		ob_clean();
+		flush();
+		@readfile($file);
+		exit();
+	} elseif(in_array($the_mdoc['type'], $mdocs_preview_file_types['ZIP'])) {
+		?>
+		<style type="text/css">
+			#outer { width: 100%; margin: 0 auto; font-family: sans-serif;  -webkit-font-smoothing: antialiased; text-shadow: rgba(0,0,0,.01) 0 0 1px;}
+			#inner { width: 90%; margin: 20px auto; border: solid 1px #888;}
+			h2 { background: #337ab7; color: #fff;  margin: 0; padding: 5px; font-weight: normal;}
+			h3 { margin: 0; padding: 5px; font-weight: normal;}
+			table { width:  100%; }
+			ul { margin: 0; }
+			li { margin: 5px 20px;  padding: 0;}
+			.odd { background:  #dee1e1; }
+		</style>
+		<div id="outer">
+			<div id="inner">
+				<h2><?php _e('Zip File Content','memphis-documents-library'); ?></h2>
+				<table>
+					<?php	
+					$zip = zip_open($file);
+					if ($zip) {
+						$odd = false;
+						while ($zip_entry = zip_read($zip)) {
+							$entry = trim(zip_entry_name($zip_entry));
+							if(strpos($entry, '__MACOSX') === false && strpos($entry, '.DS_Store') === false) {
+								if (zip_entry_open($zip, $zip_entry)) {
+									$contents = zip_entry_name($zip_entry);
+									?>
+									<tr class="<?php if($odd == false) { echo 'even'; } else { echo 'odd'; } ?>">
+										<td  ><?php echo $contents; ?></td>
+									</tr>
+									<?php
+									if($odd == false) $odd = true;
+									else $odd = false;
+									zip_entry_close($zip_entry);
+								}
+							}
+						}
+						zip_close($zip);
+						?>
+				</table>
+			</div>
+		</div>
+		<?php
+		}
+	} else {
+		?>
+		<style type="text/css">
+			#outer { width: 100%; margin: 0 auto; font-family: sans-serif;  -webkit-font-smoothing: antialiased; text-shadow: rgba(0,0,0,.01) 0 0 1px;}
+			#inner { width: 90%; margin: 20px auto; border: solid 1px #888;}
+			h2 { background: #337ab7; color: #fff;  margin: 0; padding: 5px; font-weight: normal;}
+			h3 { margin: 0; padding: 5px; font-weight: normal;}
+			ul { margin: 0; }
+			li { margin: 5px 20px;  padding: 0;}
+		</style>
+		<div id="outer">
+			<div id="inner">
+				<h2><?php _e('Sorry the file type you are trying to preview is unsupported.','memphis-documents-library'); ?></h1>
+				<h3><?php _e('Below is a list of currently supported file types', 'memphis-documents-library'); ?>:</h3>
+				<ul>
+					<?php
+					foreach($mdocs_preview_file_types as $index => $type) {
+						if(is_array($type)) {
+							echo '<li>'.$index.'</li>';
+							echo '<ul>';
+							foreach($type as $file_type) {
+								echo '<li>'.$file_type.'</li>';
+							}
+							echo '</ul>';
+						}
+					}
+					?>
+				</ul>
+			</div>
+		</div>
+		<?php
+	}
+	exit();
 }
 // PREVIEW - IMAGE
 function mdocs_load_image_iframe($the_mdoc) {
 	?>
 	<div style="text-align: center;">
-		<img class="img-thumbnail mdocs-img-preview" src="<?php echo site_url(); ?>/?mdocs-img-preview=<?php echo $the_mdoc['filename']; ?>" />
+		<img class="img-thumbnail mdocs-img-preview img-responsive" src="<?php echo site_url(); ?>/?mdocs-img-preview=<?php echo $the_mdoc['filename']; ?>" />
 	</div>
 	<?php
 }
@@ -76,26 +174,30 @@ function mdocs_show_description($id) {
 	$the_mdoc = get_the_mdoc_by($id, 'id');
 	$mdocs_desc = apply_filters('the_content', $the_mdoc['desc']);
 	$mdocs_desc = str_replace('\\','',$mdocs_desc);
-	if(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '') {
-		$boxview = new mdocs_box_view();
-		$thumbnail = $boxview->getThumbnail($the_mdoc['box-view-id']);
-		$json_thumbnail = json_decode($thumbnail,true);
-	} else $json_thumbnail['type'] = 'error';
 	$the_image_file = preg_replace('/ /', '%20', $the_mdoc['filename']);
 	$image_size = @getimagesize(get_site_url().'/?mdocs-img-preview='.$the_image_file);
-	$thumbnail_size = 256;
+	if(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '' && strtolower($the_mdoc['type']) != 'zip' && strtolower($the_mdoc['type']) != 'rar' && $image_size == false) {
+		$boxview = new mdocs_box_view();
+		$thumbnail = true;
+	} else {
+		$thumbnail = false;
+		
+	}
 	?>
 	<div class="mdoc-desc">
 	<?php
-	if($json_thumbnail['type'] != 'error') {
+	if($thumbnail) {
 		if(function_exists('imagecreatefromjpeg')) {
 			?>
 			<div class="">
-				<img class="mdocs-thumbnail pull-left img-thumbnail img-responsive" src="<?php $boxview->displayThumbnail($thumbnail); ?>" alt="<?php echo $the_mdoc['filename']; ?>" />
+				<img class="mdocs-thumbnail pull-left img-thumbnail img-responsive" src="<?php $boxview->getThumbnail($the_mdoc['box-view-id'], $the_mdoc); ?>" alt="<?php echo $the_mdoc['filename']; ?>" />
 			</div>
 			<?php
 		}
 	} elseif($the_mdoc['type'] == 'pdf' && class_exists('imagick')) {
+		$the_image_file = preg_replace('/ /', '%20', $the_mdoc['filename']);
+		$image_size = @getimagesize(get_site_url().'/?mdocs-img-preview='.$the_image_file);
+		$thumbnail_size = 256;
 		$upload_dir = wp_upload_dir();
 		$file = $upload_dir['basedir']."/mdocs/".$the_mdoc['filename'].'[0]';
 		$thumbnail = new Imagick($file);
@@ -109,7 +211,7 @@ function mdocs_show_description($id) {
 		</div>
 		<?php
 	} elseif( $image_size != false) {
-		
+		$thumbnail_size = 256;
 		$width = $image_size[0];
 		$height = $image_size[1];
 		$aspect_ratio = round($width/$height,2);
@@ -147,7 +249,6 @@ function mdocs_show_description($id) {
 			ob_start();
 			$upload_dir = wp_upload_dir();
 			$src_image = $upload_dir['basedir'].MDOCS_DIR.$the_mdoc['filename'];
-		
 			if($image_size['mime'] == 'image/jpeg') $image = imagecreatefromjpeg($src_image);
 			elseif($image_size['mime'] == 'image/png') $image = imagecreatefrompng($src_image);
 			elseif($image_size['mime'] == 'image/gif') $image = imagecreatefromgif($src_image);
@@ -155,13 +256,11 @@ function mdocs_show_description($id) {
 			$white = imagecolorallocate($thumnail, 255, 255, 255);
 			imagefill($thumnail, 0, 0, $white);
 			imagecopyresampled($thumnail,$image,0,0,0,0,$thumbnail_width,$thumbnail_height,$image_size[0],$image_size[1]);
-			
 			imagepng($thumnail);
 			imagedestroy($image);
 			imagedestroy($thumnail);
 			$png = ob_get_clean();
 			$uri = "data:image/png;base64," . base64_encode($png);
-			
 			?>
 			<div class="">
 				<img class="mdocs-thumbnail pull-left img-thumbnail  img-responsive" src="<?php echo $uri; ?>" alt="<?php echo $the_mdoc['filename']; ?>" />

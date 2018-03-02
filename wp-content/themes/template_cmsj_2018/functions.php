@@ -3,13 +3,15 @@
 
 define('TEMPLATE_URI', get_template_directory_uri());
 
-define('SUPORTE_URI', 'http://clipagem.cmsj.info');
+define('SUPORTE_URI', 'http://suporte.cmsj.info');
 define('COMUNICADOS_URI', '/comunicados');
+define('NOTICIAS_URI', '/comunicados');
 define('FOLHAWEB_URI', 'http://192.168.4.10/folhaweb');	
 define('RAMAIS_URI', '/ramais');
 define('DOM_URI', 'https://www.diariomunicipal.sc.gov.br/site/');
 define('CLIPAGEMDIGITAL_URI', 'http://clipagem.cmsj.info');
 define('CONFIGURACOES_URI', '/wp-admin/profile.php');
+define('AD_FILTER', '(&(objectCategory=person)(objectClass=user)(samaccountname=*)(!(UserAccountControl:1.2.840.113556.1.4.803:=2))(!(cn=*Admin*))(!(cn=*teste*))(!(cn=*VM*))(!(cn=*Suporte*)))');
 
 
 add_post_type_support( 'page', 'excerpt' );
@@ -294,7 +296,7 @@ function my_custom_fonts() {
 } 
 </style>';
 }
-
+/*
 function metabox_ramais( $meta_boxes ) {
 	$prefix = 'prefix-ramais';
 
@@ -323,6 +325,7 @@ function metabox_ramais( $meta_boxes ) {
 
 	return $meta_boxes;
 }
+*/
 
 function add_new_roles(){
 	add_role( 'rh', 'Recursos Humanos', array( 'read' => true, 'level_0' => true ));
@@ -332,7 +335,7 @@ function add_new_roles(){
 }
 
 
-add_filter( 'rwmb_meta_boxes', 'metabox_ramais' );
+//add_filter( 'rwmb_meta_boxes', 'metabox_ramais' );
 
 
 function add_event_caps() {
@@ -341,7 +344,7 @@ function add_event_caps() {
 
 	$role = get_role( 'administrator' );
 	// Ramais
-	$role->add_cap( 'edit_ramal' ); 
+/*	$role->add_cap( 'edit_ramal' ); 
 	$role->add_cap( 'read_ramal' ); 
 	$role->add_cap( 'delete_ramal' ); 
 	$role->add_cap( 'edit_ramais' ); 
@@ -349,6 +352,7 @@ function add_event_caps() {
 	$role->add_cap( 'publish_ramais' ); 
 	$role->add_cap( 'read_private_ramais' ); 
 	$role->add_cap( 'create_ramais' ); 
+	*/
 	// Comunicados
 	$role->add_cap( 'edit_comunicado' ); 
 	$role->add_cap( 'read_comunicado' ); 
@@ -381,6 +385,27 @@ function add_event_caps() {
 	$role->add_cap( 'create_comunicados' );
 }
 
+function get_last_clipagens() {
+	$servidor = 'localhost';
+    $usuario = 'root';
+    $senha = 'root';
+    $banco = 'clipagem_digital';
+    
+    $mysqli = new mysqli($servidor, $usuario, $senha, $banco);
+    mysqli_set_charset($mysqli, "utf8");
+    
+    if(mysqli_connect_errno()) {
+        echo ("Erro ao Conectar ao Banco de Dados");
+        exit;
+	}
+
+	$query = "SELECT a.id_clipagem, c.titulo, c.veiculo, c.editoria, c.autor, c.data, c.pagina, c.tipo, c.tags, a.nome, a.ID FROM clipagens c, arquivos a where a.id_clipagem = c.ID order by a.id_clipagem DESC LIMIT 0,4";
+
+	$results = $mysqli->query($query);
+	
+	return 	$results;
+}
+
 add_action( 'admin_init', 'add_event_caps');
 
 add_action( 'init', 'add_new_roles');
@@ -396,7 +421,7 @@ add_action( 'init', 'post_type_comunicados');
 //add_action( 'init', 'post_type_rh');
 
 add_action( 'init', 'post_type_galeria');
-add_action( 'init', 'post_type_ramais');
+//add_action( 'init', 'post_type_ramais');
 add_theme_support( 'post-thumbnails', array('comunicados', 'galeria'));
 add_action('init','possibly_redirect'); 
 //add_action('admin_head', 'my_custom_fonts');

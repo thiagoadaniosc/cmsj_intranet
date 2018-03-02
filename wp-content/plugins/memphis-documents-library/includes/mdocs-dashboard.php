@@ -203,8 +203,8 @@ function mdocs_uploader() {
 						<label class="col-sm-2 control-label" for="mdocs-file-status"><?php _e('File Status','memphis-documents-library'); ?></label>
 						<div class="col-sm-10">
 							<select class="form-control input-lg" name="mdocs-file-status" id="mdocs-file-status" >
-								<option value="public" ><?php _e('Public','memphis-documents-library'); ?></option>
-								<option value="hidden" ><?php _e('Hidden','memphis-documents-library'); ?></option>
+								<option value="public" ><?php _e('Public - [ Everyone can view this file ]','memphis-documents-library'); ?></option>
+								<option value="hidden" ><?php _e('Private - [ Only you can view this file ]','memphis-documents-library'); ?></option>
 							</select>
 						</div>
 					</div>

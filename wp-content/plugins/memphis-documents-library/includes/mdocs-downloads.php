@@ -1,51 +1,72 @@
 <?php
-if(isset($_GET['mdocs-file']) || isset($_GET['is-google']) || isset($_GET['mdocs-version']) || isset($_GET['mdocs-export-file'])) mdocs_download_file();
-if(isset($_GET['mdocs-img-preview']) ) { mdocs_preview_image(); }
+if(isset($_REQUEST['mdocs-file']) || isset($_REQUEST['mdocs-download-version']) || isset($_REQUEST['mdocs-export-file']) || isset($_REQUEST['mdocs-preview']) || isset($_REQUEST['mdocs-crap'])) mdocs_download_file();
+if(isset($_REQUEST['mdocs-img-preview']) ) { mdocs_preview_image(); }
 function mdocs_preview_image() { add_action( 'plugins_loaded', 'mdocs_load_plugins_for_image_preview' ); }
 function mdocs_download_file() { add_action( 'plugins_loaded', 'mdocs_load_plugins_for_download' ); }
 function mdocs_load_plugins_for_download() {
 	$mdocs = get_option('mdocs-list');
 	$upload_dir = wp_upload_dir();
-	$is_allowed = false;
-	// IS GOOGLE PREVIEW
-	if(isset($_GET['is-google'])) {
-		$is_google = true;
-		$the_mdoc = get_the_mdoc_by(mdocs_sanitize_string(basename($_GET['is-google'])), 'id');
-		$filename = $the_mdoc['filename'];
-		$file = $upload_dir['basedir'].'/mdocs/'.$filename;
-	} else $is_google = false;
+	// IS A PREVIEW
+	if(isset($_REQUEST['show_type'])) {
+		if($_REQUEST['show_type'] == 'preview' || $_REQUEST['show_type'] == 'versions' || $_REQUEST['show_type'] == 'desc') {
+			mdocs_load_preview();
+			exit();
+		}
+	}
 	// IS BOXVIEW PREVIEW
-	if(isset($_GET['is-box-view'])) $is_box_view = true;
+	if(isset($_REQUEST['is-box-view'])) $is_box_view = true;
 	else $is_box_view = false;
 	// CHECK TYPE OF DOWNLOAD
-	if(isset($_GET['mdocs-export-file']) ) {
+	if(isset($_REQUEST['mdocs-export-file']) ) {
 		$is_allowed = mdocs_check_file_rights(null, false);
-		$filename = basename(mdocs_sanitize_string($_GET['mdocs-export-file']));
+		$filename = basename(mdocs_sanitize_string($_REQUEST['mdocs-export-file']));
 		$file = sys_get_temp_dir().'/'.$filename;
 		$the_mdoc = array();
 		$the_mdoc['non_members'] = '';
-	} elseif(isset($_GET['mdocs-version']) ) {
-		$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_GET['mdocs-file-id'])), 'id');
-		$is_allowed = mdocs_check_file_rights($the_mdoc, false);
-		$file = $upload_dir['basedir'].'/mdocs/'.basename(mdocs_sanitize_string($_GET['mdocs-version']));
-		$filename = substr(basename(mdocs_sanitize_string($_GET['mdocs-version'])), 0, strrpos(basename(mdocs_sanitize_string($_GET['mdocs-version'])), '-'));
-	} elseif(isset($_GET["mdocs-file"])) {
-		$the_mdoc = get_the_mdoc_by(mdocs_sanitize_string($_GET["mdocs-file"]), 'id');
-		$is_allowed = mdocs_check_file_rights($the_mdoc, false);
+	} elseif(isset($_REQUEST['mdocs-version']) ) {
+		$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_REQUEST['mdocs-file'])), 'id');
+		$is_allowed = mdocs_check_file_rights($the_mdoc);
+		$file = $upload_dir['basedir'].'/mdocs/'.basename(mdocs_sanitize_string($_REQUEST['mdocs-version']));
+		$filename = substr(basename(mdocs_sanitize_string($_REQUEST['mdocs-version'])), 0, strrpos(basename(mdocs_sanitize_string($_REQUEST['mdocs-version'])), '-'));
+	} elseif(isset($_REQUEST['mdocs-preview'])) {
+		if(wp_verify_nonce( $_REQUEST['_mdocs-preview'], 'mdocs-preview-'.$_REQUEST['mdocs-preview'])) {
+			mdocs_show_preview_iframe_content($_REQUEST['mdocs-preview']);
+		} else {
+			$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_REQUEST['mdocs-preview'])), 'id');
+			$is_allowed = false;
+			$filename = $the_mdoc['filename'];
+			$file = $upload_dir['basedir'].'/mdocs/'.$filename;
+		}
+	} elseif(isset($_REQUEST["mdocs-file"])) {
+		$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_REQUEST['mdocs-file'])), 'id');
+		$is_allowed = mdocs_check_file_rights($the_mdoc);
 		$filename = $the_mdoc['filename'];
 		$file = $upload_dir['basedir'].'/mdocs/'.$filename;
-	} elseif($is_google == false || $is_box_view == false) {
-		//mdocs_errors(__('Something when wrong, and your download has failed.'), 'error');
-	}
+	} elseif(isset($_REQUEST["mdocs-crap"])) {
+		if(wp_verify_nonce( $_REQUEST['_mdocs-previewss'], 'mdocs-previewss-'.$_REQUEST['mdocs-crap'])) {
+			$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_REQUEST['mdocs-crap'])), 'id');
+			$is_allowed = true; //mdocs_check_file_rights($the_mdoc);
+			$filename = $the_mdoc['filename'];
+			$file = $upload_dir['basedir'].'/mdocs/'.$filename;
+		} else {
+			$the_mdoc = get_the_mdoc_by(basename(mdocs_sanitize_string($_REQUEST['mdocs-crap'])), 'id');
+			$is_allowed = false;
+			$filename = $the_mdoc['filename'];
+			$file = $upload_dir['basedir'].'/mdocs/'.$filename;
+		}
+	} 
 	// COUNT THE DOWNLOAD
-	if($is_allowed && !isset($_GET['mdocs-export-file']) && !isset($_GET['mdocs-version']) && $is_box_view === false && $is_google === false) {
+	if($is_allowed && !isset($_REQUEST['mdocs-export-file']) && !isset($_REQUEST['mdocs-version']) && $is_box_view === false  ) {
 		$mdocs[$the_mdoc['index']]['downloads'] = intval($mdocs[$the_mdoc['index']]['downloads'])+1;
 		mdocs_save_list($mdocs);
 	}
-	$filetype = wp_check_filetype($file);
 	
-	//mdocs_check_file_rights($the_mdoc, false) && $the_mdoc['non_members'] == 'on' || is_user_logged_in()
-	if($is_allowed && $the_mdoc['non_members'] == 'on' || is_user_logged_in()  || $is_box_view || $is_google) {
+	
+	
+	
+	
+	$filetype = wp_check_filetype($file);
+	if($is_allowed) {
 		if (file_exists($file)  ) {
 			header('Content-Description: File Transfer');
 			header('Content-Type: '.$filetype['type']);
@@ -99,7 +120,7 @@ function mdocs_load_plugins_for_download() {
 }
 // IMAGE PREVIEW
 function mdocs_load_plugins_for_image_preview() {
-	$image_file = sanitize_text_field($_GET['mdocs-img-preview']);
+	$image_file = sanitize_text_field($_REQUEST['mdocs-img-preview']);
 	//$image_file = sanitize_file_name( $image_file );
 	$upload_dir = wp_upload_dir();
 	$image = $upload_dir['basedir'].MDOCS_DIR.basename($image_file); 

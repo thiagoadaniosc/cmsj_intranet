@@ -1,7 +1,7 @@
 <?php
 function mdocs_load_modals() {
 	global $post;
-	if(is_admin()) {
+	if(is_admin() || $post == null) {
 		load_preview_modal();
 		load_ratings_modal();
 		load_add_update_modal();
@@ -25,7 +25,7 @@ function mdocs_load_modals() {
 }
 function load_add_update_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-add-update" tabindex="-1" role="dialog" aria-labelledby="mdocs-add-update-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-add-update" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -44,11 +44,11 @@ function load_add_update_modal() {
 }
 function load_description_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-description-preview" tabindex="-1" role="dialog" aria-labelledby="mdocs-description-preview-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-description-preview" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-body">
-					<h4 id="mdocs-description-preview-aria""></h4>
+					
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?php _e('Close','memphis-documents-library'); ?></span></button>
 					<div class="mdocs-description-preview-body mdocs-modal-body mdocs-post"></div>
 				</div>
@@ -62,7 +62,7 @@ function load_description_modal() {
 }
 function load_preview_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-file-preview" tabindex="-1" role="dialog" aria-labelledby="mdocs-file-preview-aria" aria-hidden="true" >
+	<div class="modal fade mdocs-modal" id="mdocs-file-preview" tabindex="-1" role="dialog" aria-hidden="true" >
 		<div class="modal-dialog modal-lg" style="height: 100% !important;">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -81,7 +81,7 @@ function load_preview_modal() {
 
 function load_ratings_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-rating" tabindex="-1" role="dialog" aria-labelledby="mdocs-ratings-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-rating" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -99,7 +99,7 @@ function load_ratings_modal() {
 }
 function load_share_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-share" tabindex="-1" role="dialog" aria-labelledby="mdocs-share-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-share" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -117,7 +117,7 @@ function load_share_modal() {
 }
 function load_batch_edit_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-batch-edit" tabindex="-1" role="dialog" aria-labelledby="mdocs-batch-edit-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-batch-edit" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -135,7 +135,7 @@ function load_batch_edit_modal() {
 }
 function load_batch_move_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-batch-move" tabindex="-1" role="dialog" aria-labelledby="mdocs-batch-move-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-batch-move" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -153,7 +153,7 @@ function load_batch_move_modal() {
 }
 function load_batch_delete_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-batch-delete" tabindex="-1" role="dialog" aria-labelledby="mdocs-batch-delete-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-batch-delete" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-body">
@@ -172,7 +172,7 @@ function load_batch_delete_modal() {
 }
 function load_versions_modal() {
 	?>
-	<div class="modal fade mdocs-modal" id="mdocs-versions" tabindex="-1" role="dialog" aria-labelledby="mdocs-versions-aria" aria-hidden="true">
+	<div class="modal fade mdocs-modal" id="mdocs-versions" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">

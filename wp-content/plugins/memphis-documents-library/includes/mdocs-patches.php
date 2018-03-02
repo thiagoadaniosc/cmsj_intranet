@@ -309,20 +309,6 @@ function mdocs_v2_5_admin_notice_v1() {
     </div
     <?php
 }
-function mdocs_v3_0_patch_run_updater() {
-	$mdocs = get_option('mdocs-list');
-	$boxview = new mdocs_box_view();
-	foreach($mdocs as $index => $the_mdoc) {
-		//if(!isset($the_mdoc['box-view-id'])) {
-			$upload_file = $boxview->uploadFile(get_site_url().'/?mdocs-file='.$the_mdoc['id'].'&mdocs-url=false&is-box-view=true', $the_mdoc['filename']);
-			$the_mdoc['box-view-id'] = $upload_file['id'];
-			$mdocs[$index] = $the_mdoc;
-			update_option('mdocs-list', $mdocs, '' , 'no');
-		//}
-	}
-	update_option('mdocs-v3-0-patch-var-1',true);
-	update_option('mdocs-box-view-updated',true);
-}
 function mdocs_v3_0_patch_cancel_updater() {
 	update_option('mdocs-v3-0-patch-var-1',true);
 	update_option('mdocs-box-view-updated',false);

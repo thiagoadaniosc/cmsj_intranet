@@ -61,9 +61,13 @@ function mdocs_file_upload() {
 						//elseif(!is_numeric($mdocs_version)) $mdocs_version = '1.0';
 						if(!isset($upload['error'])) {
 							if(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '') {
-								$boxview = new mdocs_box_view();
-								$boxview_file = $boxview->uploadFile(get_site_url().'/?mdocs-file='.$upload['attachment_id'].'&mdocs-url=false&is-box-view=true', $upload['filename']);
-								if(!isset($boxview_file['id'])) $boxview_file['id'] = 0;
+								$is_image = @getimagesize($upload['file']);
+								if($is_image == false && pathinfo($upload['file'], PATHINFO_EXTENSION) != 'zip' && pathinfo($upload['file'], PATHINFO_EXTENSION) != 'rar') {
+									$boxview = new mdocs_box_view();
+									$upload['type'] = pathinfo($upload['file'], PATHINFO_EXTENSION);;
+									$boxview_file = $boxview->uploadFile($upload);
+									$boxview_file = $boxview_file['entries'][0];
+								} else $boxview_file['id'] = 0;
 							} else $boxview_file['id'] = 0;
 							array_push($mdocs, array(
 								'id'=>(string)$upload['attachment_id'],
@@ -110,35 +114,38 @@ function mdocs_file_upload() {
 							$upload = mdocs_process_file($_FILES['mdocs']);
 							if(!isset($upload['error'])) {
 								if(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '') {
-									$boxview = new mdocs_box_view();
-									$boxview_file = $boxview->uploadFile(get_site_url().'/?mdocs-file='.$old_doc['id'].'&mdocs-url=false&is-box-view=true', $filename);
+									$is_image = @getimagesize($upload['file']);
+									if($is_image == false && pathinfo($upload['file'], PATHINFO_EXTENSION) != 'zip' && pathinfo($upload['file'], PATHINFO_EXTENSION) != 'rar') {
+										$boxview = new mdocs_box_view();
+										$upload['type'] = pathinfo($upload['file'], PATHINFO_EXTENSION);;
+										$boxview_file = $boxview->uploadFile($upload);
+										$boxview_file = $boxview_file['entries'][0];
+										$the_mdoc = get_the_mdoc_by($old_doc['id'], 'id');
+										$boxview->deleteFile($the_mdoc);
+									} else $boxview_file['id'] = 0;
 								} else $boxview_file['id'] = 0;
 								if($mdocs_version == '') $mdocs_version = '1.0';
 								elseif($mdocs_version == $mdocs[$mdocs_index]['version']) $mdocs_version = mdocs_increase_minor_version($mdocs[$mdocs_index]['version']);
-								
-								
-								
-								
-								$mdocs[$mdocs_index]['filename'] = $upload['filename'];
-								$mdocs[$mdocs_index]['name'] = $upload['name'];
-								$mdocs[$mdocs_index]['desc'] = $upload['desc'];
-								$mdocs[$mdocs_index]['version'] = (string)$mdocs_version;
-								$mdocs[$mdocs_index]['type'] = (string)$mdocs_fle_type;
-								$mdocs[$mdocs_index]['cat'] = $mdocs_cat;
-								$mdocs[$mdocs_index]['owner'] = $mdocs[$mdocs_index]['owner'];
-								$mdocs[$mdocs_index]['contributors'] = $_POST['mdocs-contributors'];
-								$mdocs[$mdocs_index]['author'] = $_POST['mdocs-real-author'];
-								$mdocs[$mdocs_index]['size'] = intval($mdocs_fle_size);
-								$mdocs[$mdocs_index]['modified'] = $upload['modified'];
-								$mdocs[$mdocs_index]['show_social'] =(string)$mdocs_social;
-								$mdocs[$mdocs_index]['non_members'] =(string)$mdocs_non_members;
-								$mdocs[$mdocs_index]['file_status'] =(string)$mdocs_file_status;
-								$mdocs[$mdocs_index]['post_status'] =(string)$mdocs_post_status;
-								$mdocs[$mdocs_index]['post_status_sys'] =(string)$mdocs_post_status_sys;
-								$mdocs[$mdocs_index]['doc_preview'] =(string)$mdocs_doc_preview;
-								$mdocs[$mdocs_index]['box-view-id'] = $boxview_file['id'];
-								array_push($mdocs[$mdocs_index]['archived'], $old_doc_name);
-								$mdocs = mdocs_array_sort($mdocs);
+									$mdocs[$mdocs_index]['filename'] = $upload['filename'];
+									$mdocs[$mdocs_index]['name'] = $upload['name'];
+									$mdocs[$mdocs_index]['desc'] = $upload['desc'];
+									$mdocs[$mdocs_index]['version'] = (string)$mdocs_version;
+									$mdocs[$mdocs_index]['type'] = (string)$mdocs_fle_type;
+									$mdocs[$mdocs_index]['cat'] = $mdocs_cat;
+									$mdocs[$mdocs_index]['owner'] = $mdocs[$mdocs_index]['owner'];
+									$mdocs[$mdocs_index]['contributors'] = $_POST['mdocs-contributors'];
+									$mdocs[$mdocs_index]['author'] = $_POST['mdocs-real-author'];
+									$mdocs[$mdocs_index]['size'] = intval($mdocs_fle_size);
+									$mdocs[$mdocs_index]['modified'] = $upload['modified'];
+									$mdocs[$mdocs_index]['show_social'] =(string)$mdocs_social;
+									$mdocs[$mdocs_index]['non_members'] =(string)$mdocs_non_members;
+									$mdocs[$mdocs_index]['file_status'] =(string)$mdocs_file_status;
+									$mdocs[$mdocs_index]['post_status'] =(string)$mdocs_post_status;
+									$mdocs[$mdocs_index]['post_status_sys'] =(string)$mdocs_post_status_sys;
+									$mdocs[$mdocs_index]['doc_preview'] =(string)$mdocs_doc_preview;
+									$mdocs[$mdocs_index]['box-view-id'] = $boxview_file['id'];
+									array_push($mdocs[$mdocs_index]['archived'], $old_doc_name);
+									$mdocs = mdocs_array_sort($mdocs);
 								mdocs_save_list($mdocs);
 							} else mdocs_errors($upload['error'],'error');
 						} else mdocs_errors(MDOCS_ERROR_2 , 'error');

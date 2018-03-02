@@ -33,8 +33,10 @@ function mdocs_display_file_info($the_mdoc, $index=0, $current_cat) {
 	if(is_admin()) {
 		if($the_mdoc['file_status'] == 'hidden' || get_option('mdocs-hide-all-files')) $file_status = '<i class="fa fa-eye-slash" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="'.__('File is Hidden', 'memphis-documents-library').'"></i>';
 		else $file_status = '';
-		if($the_mdoc['post_status'] != 'publish' || get_option('mdocs-hide-all-posts')) $post_status = '&nbsp<i class="fa fa-lock" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="'.__('Post is ', 'memphis-documents-library').ucfirst($the_mdoc['post_status']).'"></i>';
-		else $post_status = '';
+		if($the_mdoc['post_status'] != 'publish') $post_status = '&nbsp<i class="fa fa-lock" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="'.__('Post is ', 'memphis-documents-library').ucfirst($the_mdoc['post_status']).'"></i>';
+		elseif(get_option('mdocs-hide-all-posts')) {
+			$post_status = '&nbsp<i class="fa fa-lock" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="'.__('All Post are Hidden ', 'memphis-documents-library').'"></i>';
+		} else $post_status = '';
 	} else {
 		$file_status = '';
 		$post_status = '';

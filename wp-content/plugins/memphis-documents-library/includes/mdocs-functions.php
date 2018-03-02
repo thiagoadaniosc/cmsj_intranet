@@ -749,12 +749,6 @@ function mdocs_list_header($show=true) {
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="?page=memphis-documents.php&mdocs-cat=restore"><?php _e('Restore To Default','memphis-documents-library'); ?></a></li>
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="?page=memphis-documents.php&mdocs-cat=short-codes"><?php _e('Short Codes','memphis-documents-library'); ?></a></li>
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="?page=memphis-documents.php&mdocs-cat=server-compatibility"><?php _e('Test Server Compatibility','memphis-documents-library'); ?></a></li>
-						<?php
-						if(get_option('mdocs-preview-type') == 'box' && get_option('mdocs-box-view-key') != '') {
-						  ?>
-						  
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="mdosc-3-0-patch-btn" data-num-docs="<?php echo $num_docs; ?>"><?php _e('Run Box View Preview and Thumbnail Updater','memphis-documents-library'); ?></a></li>
-						  <?php } ?>
 					</ul>
 				</div>
 				<?php } ?>

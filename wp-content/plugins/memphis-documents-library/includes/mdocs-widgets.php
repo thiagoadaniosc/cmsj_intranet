@@ -12,34 +12,33 @@ class mdocs_last_updated extends WP_Widget {
 	function widget( $args, $instance ) {
 		$mdocs = get_option('mdocs-list');
 		$the_list  = mdocs_array_sort($mdocs,'modified', SORT_DESC, true);
+		extract($args, EXTR_SKIP);
+		echo $before_widget;
+		echo $before_title;
+		//Display title as stored in this instance of the widget
+		if(get_option('mdocs-hide-widget-titles') == false) _e('Last Updated', 'memphis-documents-library');
+		echo $after_title;
 		?>
-		<div id="widget-last-updated" class="widget" role="complementary">
-			<aside class="widget widget_pages">
-				<?php
-				if(get_option('mdocs-hide-widget-titles') == false) { ?> <h2 class="widget-title"><?php _e('Last Updated', 'memphis-documents-library'); ?></h2> <?php } ?>
-				<div class="textwidget">
-					<table class="table table-condensed">
-						<tr>
-							<th></th>
-							<th>File</th>
-							<th>Date</th>
-						</tr>
-					<?php
-					for($i=0; $i< get_option('mdocs-last-updated');$i++) {
-						if(!isset($the_list[$i])) break;
-						$permalink = mdocs_get_permalink($the_list[$i]['parent']);
-						echo '<tr>';
-						echo '<td>'.($i+1).'.</td>';
-						echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
-						echo '<td class="mdocs-widget-date"><small>'.date(get_option('mdocs-date-format'), $the_list[$i]['modified']).'</small></td>';
-						echo '</tr>';
-					}
-					?>
-					</table>
-				</div>
-			</aside>
-		</div>
+		<table class="table table-condensed">
+			<tr>
+				<th></th>
+				<th>File</th>
+				<th>Date</th>
+			</tr>
 		<?php
+		for($i=0; $i< get_option('mdocs-last-updated');$i++) {
+			if(!isset($the_list[$i])) break;
+			$permalink = mdocs_get_permalink($the_list[$i]['parent']);
+			echo '<tr>';
+			echo '<td style="width: 1px">'.($i+1).'.</td>';
+			echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
+			echo '<td class="mdocs-widget-date" style="width: 1px"><small>'.date(get_option('mdocs-date-format'), $the_list[$i]['modified']).'</small></td>';
+			echo '</tr>';
+		}
+		?>
+		</table>
+		<?php
+		echo $after_widget;
 	}
 	function update( $new_instance, $old_instance ) {
 		$instance['title'] = strip_tags( $new_instance['title'] );
@@ -62,39 +61,38 @@ class mdocs_top_rated extends WP_Widget {
 	function widget( $args, $instance ) {
 		$mdocs = get_option('mdocs-list');
 		$the_list  = mdocs_array_sort($mdocs,'rating', SORT_DESC, true);
+		extract($args, EXTR_SKIP);
+		echo $before_widget;
+		echo $before_title;
+		if(get_option('mdocs-hide-widget-titles') == false)  _e('Top Rated', 'memphis-documents-library'); 
+		echo $after_title;
 		?>
-		<div id="widget-top-rated" class="widget" role="complementary">
-			<aside class="widget widget_pages">
-				<?php if(get_option('mdocs-hide-widget-titles') == false) { ?> <h2 class="widget-title"><?php _e('Top Rated', 'memphis-documents-library'); ?></h2> <?php } ?>
-				<div class="textwidget">
-					<table class="table table-condensed">
-						<tr>
-							<th></th>
-							<th>File</th>
-							<th>Rating</th>
-						</tr>
-					<?php
-					for($i=0; $i< get_option('mdocs-top-rated');$i++) {
-						if(!isset($the_list[$i])) break;
-						$permalink = mdocs_get_permalink($the_list[$i]['parent']);
-						echo '<tr>';
-						echo '<td>'.($i+1).'.</td>';
-						echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
-						echo '<td class="mdocs-widget-rating"><small>';
-						for($j=1;$j<=5;$j++) {
-							if($the_list[$i]['rating'] >= $j) echo '<i class="fa fa-star mdocs-gold" id="'.$j.'" aria-hidden="true"></i>';
-							elseif(ceil($the_list[$i]['rating']) == $j ) echo '<i class="fa fa-star-half-full mdocs-gold" id="'.$j.'" aria-hidden="true"></i>';
-							else echo '<i class="fa fa-star-o" id="'.$j.'" aria-hidden="true"></i>';
-						}
-						echo '</small></td>';
-						echo '</tr>';
-					}
-					?>
-					</table>
-				</div>
-			</aside>
-		</div>
+		<table class="table table-condensed">
+			<tr>
+				<th></th>
+				<th>File</th>
+				<th>Rating</th>
+			</tr>
 		<?php
+		for($i=0; $i< get_option('mdocs-top-rated');$i++) {
+			if(!isset($the_list[$i])) break;
+			$permalink = mdocs_get_permalink($the_list[$i]['parent']);
+			echo '<tr>';
+			echo '<td style="width: 1px">'.($i+1).'.</td>';
+			echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
+			echo '<td class="mdocs-widget-rating" style="width: 1px"><small>';
+			for($j=1;$j<=5;$j++) {
+				if($the_list[$i]['rating'] >= $j) echo '<i class="fa fa-star mdocs-gold" id="'.$j.'" aria-hidden="true"></i>';
+				elseif(ceil($the_list[$i]['rating']) == $j ) echo '<i class="fa fa-star-half-full mdocs-gold" id="'.$j.'" aria-hidden="true"></i>';
+				else echo '<i class="fa fa-star-o" id="'.$j.'" aria-hidden="true"></i>';
+			}
+			echo '</small></td>';
+			echo '</tr>';
+		}
+		?>
+		</table>
+		<?php
+		echo $after_widget;
 	}
 	function update( $new_instance, $old_instance ) {
 		$instance['title'] = strip_tags( $new_instance['title'] );
@@ -117,34 +115,32 @@ class mdocs_top_downloads extends WP_Widget {
 	function widget( $args, $instance ) {
 		$mdocs = get_option('mdocs-list');
 		$the_list  = mdocs_array_sort($mdocs,'downloads', SORT_DESC, true);
+		extract($args, EXTR_SKIP);
+		echo $before_widget;
+		echo $before_title;
+		if(get_option('mdocs-hide-widget-titles') == false) _e('Top Downloads', 'memphis-documents-library');
 		?>
-		<div id="widget-top-downloads" class="widget" role="complementary">
-			<aside class="widget widget_pages">
-				<?php if(get_option('mdocs-hide-widget-titles') == false) { ?> <h2 class="widget-title"><?php _e('Top Downloads', 'memphis-documents-library'); ?></h2> <?php } ?>
-				<div class="textwidget">
-					<table class="table table-condensed">
-						<tr>
-							<th></th>
-							<th>File</th>
-							<th>DLs</th>
-						</tr>
-					<?php
-					for($i=0; $i< get_option('mdocs-top-downloads');$i++) {
-						if(!isset($the_list[$i])) break;
-						$permalink = mdocs_get_permalink( $the_list[$i]['parent']);
-						
-						echo '<tr>';
-						echo '<td>'.($i+1).'.</td>';
-						echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
-						echo '<td class="text-center">'.$the_list[$i]['downloads'].'</td>';
-						echo '</tr>';
-					}
-					?>
-					</table>
-				</div>
-			</aside>
-		</div>
+		<table class="table table-condensed">
+			<tr>
+				<th></th>
+				<th>File</th>
+				<th>DLs</th>
+			</tr>
 		<?php
+		for($i=0; $i< get_option('mdocs-top-downloads');$i++) {
+			if(!isset($the_list[$i])) break;
+			$permalink = mdocs_get_permalink( $the_list[$i]['parent']);
+			
+			echo '<tr>';
+			echo '<td style="width: 1px">'.($i+1).'.</td>';
+			echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
+			echo '<td class="text-center" style="width: 1px">'.$the_list[$i]['downloads'].'32433'.'</td>';
+			echo '</tr>';
+		}
+		?>
+		</table>
+		<?php
+		echo $after_widget;
 	}
 	function update( $new_instance, $old_instance ) {
 		$instance['title'] = strip_tags( $new_instance['title'] );

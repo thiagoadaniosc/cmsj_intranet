@@ -11,7 +11,33 @@ define('MDOCS_ROBOTS','http://www.kingofnothing.net/memphis/robots/memphis-robot
 $mdocs_img_types = array('jpeg','jpg','jif','jfif','png','gif', 'tif', 'tiff');
 $mdocs_input_text_bg_colors = array('#f1f1f1','#e5eaff','#efffe7','#ffecdc','#ffe9fe','#ff5000','#00ff20');
 
-
+$mdocs_preview_file_types = array(
+	'PDF' => array(
+		'pdf',
+	),
+	'IMG' => array(
+		'ai',
+		'bmp',
+		'gif',
+		'eps',
+		'jpeg',
+		'jpg',
+		'png',
+		'ps',
+		'psd',
+		'svg',
+		'tif',
+		'tiff',
+		'dcm',
+		'dicm',
+		'dicom',
+		'svs',
+		'tga',
+	),
+	'ZIP' => array(
+		'zip',
+	),
+);
 function mdocs_register_settings() {
 	//CREATE REPOSITORY DIRECTORY
 	$upload_dir = wp_upload_dir();

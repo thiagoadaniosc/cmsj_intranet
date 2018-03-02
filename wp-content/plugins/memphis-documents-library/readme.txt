@@ -6,7 +6,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.5
 Tested up to: 4.9.2
-Stable tag: 3.7.4.2
+Stable tag: 3.8
 
 A documents library for WordPress.
 
@@ -14,9 +14,20 @@ A documents library for WordPress.
 
 Memphis Documents Library (mDocs) is a  documents library for WordPress with a robust feature set.  It is a great tool for the organization and distribution of files.
 
-= What's New With Version 3.7.4.2 =
+= What's New With Version 3.8 =
 
-* *Bug* - Fixed issue "FInd Lost Files" module.
+* *New* - Box API version 2.0 is now live, you will have to create a new "Primary Access Token" in order for the view to work.
+* *New* - Changed words in file upload windows, File Status - Hidden is now File Status - Private.  No change to the underlying features.
+* *New* - Removed Google Preview.  You will now have the choice of local preview or Box View.
+* *Update* - Updated the style of all mdocs widgets, more inline with standard practice.
+* *Update* - More accessibility updates.
+* *Update* - Remove unneeded text in Direct Download URL.
+* *Bug* - Fixed issue with Twitter sharing.
+* *Bug* - Security Fixes.
+
+= Creating a Box API Developer Key for Memphis Documents Library =
+http://kingofnothing.net/creating-a-box-api-developer-key-for-memphis-documents-library/
+
 
 = Memphis Documents Library Features =
 
@@ -33,8 +44,7 @@ Memphis Documents Library (mDocs) is a  documents library for WordPress with a r
 * Exporting you documents libraries for safe backup and store, migration to another website or sharing with someone else.
 * The ability to create, edit and delete categories and subcategories.
 * Search for files using the WordPress search.
-* Customization of download button
-
+* Customization of download buttonview
 == Feature Requests ==
 
 * Feature - Have the ability to define sort options per folder.
@@ -64,12 +74,22 @@ Memphis Documents Library (mDocs) is a  documents library for WordPress with a r
 * Feature - Allow other users access to mDocs admin menus.
 * Feature - Have the post open in a modal instead of going to the page directly.
 * Feature - Have an in application pdf preview.
+* Feature - Added categories and tags to batch edit.
+* Feature - Add number of files in each folder.
 
 == Frequently Asked Questions ==
 
-= Box View Closes New Account Creation =
+= Supported Documents Types Using Local Preview =
 
-Unfortunately it has come to my attention the Box no longer allowing the creation of Box View applications keys.  This means that new users to mDocs will not be able to use the Box Viewer as an alternative to Google.  I am looking at alternatives but currently there is no solution.
+*PFD* - Browser Support: Chrome, Safari, Firefox, Edge, IE
+* 'pdf'
+*Image* - Browser Support: Chrome, Safari, Firefox, Edge, IE
+* 'ai', 'bmp', 'gif', 'eps', 'jpeg', 'jpg', 'png', 'ps', 'psd', 'svg', 'tif', 'tiff', 'dcm', 'dicm', 'dicom', 'svs', 'tga'
+
+= Creating a Box API Developer Key for Memphis Documents Library =
+
+I've created a guide to follow if anyone is interested in using the Box preview for Memphis Documents Library:
+Here is the link to the guide: http://kingofnothing.net/creating-a-box-api-developer-key-for-memphis-documents-library/
 
 = Add Page Templates to Memphis Documents Library =
 
@@ -150,6 +170,16 @@ Once uploaded the configuration menu is located in either the "Memphis" menu wit
 8. screenshot-8.png
 
 == Changelog ==
+
+= 3.8 =
+
+* *New* - Box API version 2.0 is now live, you will have to create a new "Primary Access Token" in order for the view to work.
+* *New* - Changed words in file upload windows, File Status - Hidden is now File Status - Private.  No change to the underlying features.
+* *New* - Removed Google Preview.  You will now have the choice of local preview or Box View.
+* *Update* - Updated the style of all mdocs widgets, more inline with standard practice.
+* *Update* - More accessibility updates.
+* *Update* - Remove unneeded text in Direct Download URL.
+* *Bug* - Security Fixes.
 
 = 3.7.4.2 =
 

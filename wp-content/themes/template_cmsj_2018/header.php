@@ -10,6 +10,7 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" media="all" rel="stylesheet"
     type="text/css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/css/dataTables.bootstrap4.min.css'/>
     
     <link rel="stylesheet" href="<?= TEMPLATE_URI ?>/css/template.css">
     
@@ -33,9 +34,9 @@
             <button type="button" class="btn btn-secondary col-lg-12" style="border-radius: 0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" style="font-size:24px"></i></button>
             
             <div class="dropdown-menu bg-dark" style="border-radius: 0; right:15px;left:auto; top: 50px;" >
-                <a class="dropdown-item text-light" href=""> <i class="fa fa-home"></i> Início</a>
-                <a class="dropdown-item text-light" href=""> <i class="fa fa-newspaper-o"></i> Notícias</a>
-                <a class="dropdown-item text-light" href=""><i class="fa fa-question-circle"></i> Suporte</a>
+                <a class="dropdown-item text-light" href="/"> <i class="fa fa-home"></i> Início</a>
+                <a class="dropdown-item text-light" href="/noticias"> <i class="fa fa-newspaper-o"></i> Notícias</a>
+                <a class="dropdown-item text-light" href="<?= SUPORTE_URI ?>"><i class="fa fa-question-circle"></i> GLPI </a>
                 
                 <?php 
                 $menu_name = 'menu_topo';
@@ -45,7 +46,7 @@
                 foreach ($menuitems as $item):
                 ?>
                 
-                <a class="dropdown-item text-light" href="<?= $item->utl?>"><i class="fa fa-question-circle"></i> <?= $item->title?></a>
+                <a class="dropdown-item text-light" href="<?= $item->url?>"><i class="fa fa-question-circle"></i> <?= $item->title?></a>
                 
                 
                 <?php endforeach; ?>
@@ -101,8 +102,8 @@
             
             <div class="dropdown-menu bg-dark" style="border-radius: 0; right:15px;left:auto; top: 50px;" >
                 <a class="dropdown-item text-light" href=""> <i class="fa fa-home"></i> Início</a>
-                <a class="dropdown-item text-light" href=""> <i class="fa fa-newspaper-o"></i> Notícias</a>
-                <a class="dropdown-item text-light" href=""><i class="fa fa-question-circle"></i> Suporte</a>
+                <a class="dropdown-item text-light" href="/noticias"> <i class="fa fa-newspaper-o"></i> Notícias</a>
+                <a class="dropdown-item text-light" href="<?= SUPORTE_URI ?>"><i class="fa fa-question-circle"></i> Suporte</a>
                 
                 <?php 
                 $menu_name = 'menu_topo';
@@ -112,7 +113,7 @@
                 foreach ($menuitems as $item):
                 ?>
                 
-                <a class="dropdown-item text-light" href="<?= $item->utl?>"><i class="fa fa-question-circle"></i> <?= $item->title?></a>
+                <a class="dropdown-item text-light" href="<?= $item->url?>"><?= $item->title?></a>
                 
                 
                 <?php endforeach; ?>
