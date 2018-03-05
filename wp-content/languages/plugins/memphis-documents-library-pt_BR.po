@@ -1555,7 +1555,7 @@ msgid "Memphis Docs"
 msgstr "Memphis Docs"
 
 #. #-#-#-#-#  memphis-documents-library-code.pot (Memphis Documents Library
-#. 3.7.2.1)  #-#-#-#-#
+#. 3.7.2.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/mdocs-dashboard.php:19 includes/mdocs-functions.php:963
 msgid "Memphis Documents Library"

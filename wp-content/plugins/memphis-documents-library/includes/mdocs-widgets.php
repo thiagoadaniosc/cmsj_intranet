@@ -134,7 +134,7 @@ class mdocs_top_downloads extends WP_Widget {
 			echo '<tr>';
 			echo '<td style="width: 1px">'.($i+1).'.</td>';
 			echo '<td><a href="'.$permalink.'null" >'.$the_list[$i]['name'].'</a></td>';
-			echo '<td class="text-center" style="width: 1px">'.$the_list[$i]['downloads'].'32433'.'</td>';
+			echo '<td class="text-center" style="width: 1px">'.$the_list[$i]['downloads'].'</td>';
 			echo '</tr>';
 		}
 		?>

@@ -1,0 +1,1 @@
+product where name=”name of program” call uninstall /nointeractive

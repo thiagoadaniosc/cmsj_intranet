@@ -8,7 +8,7 @@ Version: 3.8
 Text Domain: memphis-documents-library
 Domain Path: /languages
 Author URI: http://www.kingofnothing.net/
-Date: 02/28/2018
+Date: 03/01/2018
 
 Copyright 2018 Ian Howatson  (email : ian@howatson.net)
 
@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 // ********** MEMPHIS DOCUMENTS DEVELOPMENT *********************//
 define('MDOCS_DEV', false);
-define('MDOCS_SESSION_ID', md5('Memphis Documents Library Version 3.8'));
+define('MDOCS_SESSION_ID', md5('Memphis Documents Library Version 3.8.1'));
 define('MDOC_PATH',plugin_dir_path(__FILE__));
 define('MDOC_URL',plugin_dir_url(__FILE__));
 define('MDOCS_INCLUDE_PATH', 'includes/');

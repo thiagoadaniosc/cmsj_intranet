@@ -6,7 +6,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.5
 Tested up to: 4.9.2
-Stable tag: 3.8
+Stable tag: 3.8.1
 
 A documents library for WordPress.
 
@@ -14,7 +14,9 @@ A documents library for WordPress.
 
 Memphis Documents Library (mDocs) is a  documents library for WordPress with a robust feature set.  It is a great tool for the organization and distribution of files.
 
-= What's New With Version 3.8 =
+= What's New With Version 3.8.1 =
+
+* *Bug* - Fixed issue with top downloads widget.
 
 * *New* - Box API version 2.0 is now live, you will have to create a new "Primary Access Token" in order for the view to work.
 * *New* - Changed words in file upload windows, File Status - Hidden is now File Status - Private.  No change to the underlying features.
@@ -171,6 +173,10 @@ Once uploaded the configuration menu is located in either the "Memphis" menu wit
 
 == Changelog ==
 
+= 3.8.1 =
+
+* *Bug* - Fixed issue with top downloads widget.
+
 = 3.8 =
 
 * *New* - Box API version 2.0 is now live, you will have to create a new "Primary Access Token" in order for the view to work.
@@ -179,6 +185,7 @@ Once uploaded the configuration menu is located in either the "Memphis" menu wit
 * *Update* - Updated the style of all mdocs widgets, more inline with standard practice.
 * *Update* - More accessibility updates.
 * *Update* - Remove unneeded text in Direct Download URL.
+* *Bug* - Fixed issue with Twitter sharing.
 * *Bug* - Security Fixes.
 
 = 3.7.4.2 =
