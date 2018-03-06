@@ -19,6 +19,10 @@
 		input {
 			height:40px !important;
 		}
+
+        .mdocs-social-container  {
+            height: auto !important;
+        }
 	</style>
 	<section class="post-panel col-lg-12 justify-content-center row">
 		<header class="post-bg"> 
