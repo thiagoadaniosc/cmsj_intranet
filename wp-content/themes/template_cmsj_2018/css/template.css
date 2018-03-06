@@ -301,7 +301,7 @@ a {
     word-wrap: break-word;
     font-size: 20px;
 	word-wrap: break-word;
-	overflow:auto;
+	/*overflow:none;*/
 	line-height: 40px;
     
     
