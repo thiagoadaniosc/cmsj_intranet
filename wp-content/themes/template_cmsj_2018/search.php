@@ -25,6 +25,8 @@
             padding-bottom: 14px !important;"> <i class="fa fa-x fa-search"></i></button>
         </form>
 
+        <h5 class="text-center">Pesquisa: "<?= $_GET['s'] ?>"</h5>
+
         <?php if (!empty($search_value) && !empty($search_post)): ?>
         <?php foreach ($search_post as $post): ?>
         

@@ -248,16 +248,10 @@ function my_forcelogin_redirect() {
 function get_type($post_type){
 	if ($post_type == "page"){
 		return "Página";
-	} elseif ($post_type == "rh"){
-		return "Recursos Humanos";
-	} elseif ($post_type == "administracao") {
-		return "Administração";
-	} elseif($post_type == "noticias") {
+	} elseif ($post_type == "post"){
 		return "Notícias";
-	} elseif ($post_type == "informatica"){
-		return "Informática";
-	} elseif ($post_type == "galeria") {
-		return "Galeria";
+	} elseif ($post_type == "comunicados") {
+		return "Comunicados";
 	} else {
 		return "Outros";
 	}
@@ -420,8 +414,8 @@ add_action( 'init', 'post_type_comunicados');
 //add_action( 'init', 'post_type_adm');
 //add_action( 'init', 'post_type_rh');
 
-add_action( 'init', 'post_type_galeria');
+//add_action( 'init', 'post_type_galeria');
 //add_action( 'init', 'post_type_ramais');
-add_theme_support( 'post-thumbnails', array('comunicados', 'galeria'));
+//add_theme_support( 'post-thumbnails', array('comunicados', 'galeria'));
 add_action('init','possibly_redirect'); 
 //add_action('admin_head', 'my_custom_fonts');
