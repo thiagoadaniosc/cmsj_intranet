@@ -44,6 +44,7 @@
 							proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 						-->
 					</div>
+					<small class="mb-2"><i class="fa text-dark fa fa-tags"></i> <?= the_tags();?></small>
 					
 				</div>
 			</div>

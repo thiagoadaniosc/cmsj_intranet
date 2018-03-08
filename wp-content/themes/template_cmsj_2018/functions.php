@@ -7,7 +7,7 @@ define('SUPORTE_URI', 'http://suporte.cmsj.info');
 define('COMUNICADOS_URI', '/comunicados');
 define('NOTICIAS_URI', '/comunicados');
 define('FOLHAWEB_URI', 'http://192.168.4.10/folhaweb');	
-define('RAMAIS_URI', '/ramais');
+define('RAMAIS_URI', '/servidores');
 define('DOM_URI', 'https://www.diariomunicipal.sc.gov.br/site/');
 define('CLIPAGEMDIGITAL_URI', 'http://clipagem.cmsj.info');
 define('CONFIGURACOES_URI', '/wp-admin/profile.php');
@@ -258,6 +258,60 @@ function get_type($post_type){
 
 }
 
+function get_month(int $numberMonth) {
+	switch ($numberMonth) {
+		case 1:
+			return 'Janeiro';
+		break;
+
+		case 2:
+			return 'Fevereiro';
+		break;
+
+		case 3 :
+			return 'Março';
+		break;
+
+		case 4 :
+			return 'Abril';
+		break;
+
+		case 5 :
+			return 'Maio';
+		break;
+
+		case 6 :
+			return 'Junho';
+		break;
+
+		case 7 :
+			return 'Julho';
+		break;
+
+		case 8 :
+			return 'Agosto';
+		break;
+
+		case 9 :
+			return 'Setembro';
+		break;
+
+		case 10 :
+			return 'Outubro';
+		break;
+
+		case 11 :
+			return 'Novembro';
+		break;
+		
+		case 12 :
+			return 'Outubro';
+		break;
+
+
+	}
+}
+
 function possibly_redirect(){ 
 	if (isset( $_GET['action'] )){  
 		if ( in_array( $_GET['action'], array('lostpassword', 'retrievepassword') ) ) {
@@ -416,6 +470,6 @@ add_action( 'init', 'post_type_comunicados');
 
 //add_action( 'init', 'post_type_galeria');
 //add_action( 'init', 'post_type_ramais');
-//add_theme_support( 'post-thumbnails', array('comunicados', 'galeria'));
+add_theme_support( 'post-thumbnails', array('post'));
 add_action('init','possibly_redirect'); 
 //add_action('admin_head', 'my_custom_fonts');
